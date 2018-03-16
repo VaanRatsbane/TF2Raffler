@@ -14,13 +14,13 @@ namespace TF2Raffler
             using (MySqlConnection conn = new MySqlConnection())
             {
 
-                conn.ConnectionString = "Server=127.0.0.1;Database=playerranks;Trusted_Connection=true";
+                conn.ConnectionString = "Server=127.0.0.1;Database=playerranks;User=user;";
                 MySqlCommand cmd;
                 conn.Open();
                 try
                 {
                     cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM players ORDER BY poins DESC"; //Ensure results are ordered
+                    cmd.CommandText = "SELECT * FROM players ORDER BY points DESC"; //Ensure results are ordered
                     var results = cmd.ExecuteReader();
 
                     if (results == null)
@@ -77,7 +77,8 @@ namespace TF2Raffler
                                     break; //reroll
                                 else
                                 {
-                                    winners[i++] = winner; //next winner retrieval
+                                    winners.Add(winner); //next winner retrieval
+                                    i++;
                                     break;
                                 }
                             }
@@ -101,10 +102,10 @@ namespace TF2Raffler
                         htmlBuilder.AppendLine($"<h4>With {(winner.points / totalScore * 100).ToString("0.00")}% chance of winning: {winner.nickname} with {winner.points} points! Congratulations!</h4>");
 
                     htmlBuilder.AppendLine($"<p>{entries.Count} players participated and racked a total of {totalScore} points.</p>");
-                    htmlBuilder.AppendLine($"<table border=\"1\" style=\"width:100%\"><tr><th>#</th><th>Name</th><th>Score</th></tr>");
+                    htmlBuilder.AppendLine($"<table border=\"1\" style=\"width:100%\"><tr><th>#</th><th>Name</th><th>Score</th><th>Chance of Winning</th></tr>");
 
                     for (int i = 0; i < entries.Count; i++)
-                        htmlBuilder.AppendLine($"<tr><td>{i+1}</td><td>{entries[i].nickname}</td><td>{entries[i].points}</td></tr>");
+                        htmlBuilder.AppendLine($"<tr><td>{i+1}</td><td>{entries[i].nickname}</td><td>{entries[i].points}</td><td>{(entries[i].points / totalScore * 100).ToString("0.00")}%</td></tr>");
 
                     htmlBuilder.AppendLine("</body></html>");
 
