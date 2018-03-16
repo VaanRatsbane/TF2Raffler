@@ -65,9 +65,12 @@ namespace TF2Raffler
                     for (int i = 0; i < winnerAmount && i < entries.Count; )
                     {
                         float winnerBracket = (rng.Next(totalScoreUpped) + 100) / 100f; //Roll a bracket (getting the decimals back)
+                        float accumulated = 0; //current bracket
                         for (int j = entries.Count - 1; j >= 0; j--) //Iterate from lowest score
                         {
-                            if (entries[j].points > winnerBracket) //first score found above bracket is our winner
+                            accumulated += entries[j].points;
+
+                            if (accumulated > winnerBracket) //first score found above bracket is our winner
                             {
                                 var winner = entries[j];
                                 if (winners.Contains(winner)) //if entry already been chosen
